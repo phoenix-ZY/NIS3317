@@ -1,11 +1,3 @@
 # NIS3317
 
-## 目录结构
-
-│  README.md
-│
-├─Project1_Classification
-│  └─DATASET
-│          RAWDATA_HTRU_2.csv
-│
-└─Project2_
+大作业——分类：Project1_Classification
