@@ -6,12 +6,13 @@ from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import seaborn as sns
+from Prepocess.ridarplot import plot_radar
 
 global_config = {
     "clusters": 3
 }
 
-df = pd.read_csv('../data/tripadvisor_review.csv')
+df = pd.read_csv('../data/preprocessed_data.csv')
 attractions = df.iloc[:, 0]
 data = df.iloc[:, 1:]
 
@@ -20,7 +21,9 @@ labels = gmm.fit_predict(data)
 
 df['Cluster'] = labels
 
-
+df2 = df.groupby('Cluster').mean().reset_index()
+print(df2)
+plot_radar(df2,[0,1,2])
 
 
 # 可视化示例

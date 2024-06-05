@@ -1,5 +1,4 @@
 import matplotlib
-
 matplotlib.use('TkAgg')
 
 import pandas as pd
@@ -7,12 +6,13 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
+from Prepocess.ridarplot import plot_radar
 
 global_config = {
     "clusters": 3
 }
 
-df = pd.read_csv('../data/tripadvisor_review.csv')
+df = pd.read_csv('../data/preprocessed_data.csv')
 spot_names = df.iloc[:, 0]
 data = df.iloc[:, 1:]
 
@@ -23,8 +23,11 @@ kmeans = KMeans(n_clusters=global_config["clusters"], random_state=0)
 kmeans.fit(scaled_data)
 
 df['Cluster'] = kmeans.labels_
-
 print(df)
+
+df2 = df.groupby('Cluster').mean().reset_index()
+print(df2)
+plot_radar(df2,[0,1,2])
 
 
 # 可视化示例
