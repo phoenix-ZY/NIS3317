@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # 加载数据，跳过第一行
-data = pd.read_csv('review.csv')
+data = pd.read_csv('data/tripadvisor_review.csv')
 # 取出B-K列
 data = data.iloc[:, 1:11]  # 注意，Python的索引是从0开始的，所以B列是列1，K列是列10
 
@@ -13,7 +13,7 @@ pearson_corr = data.corr()
 # 使用seaborn的heatmap函数绘制相关系数矩阵的热力图
 plt.figure(figsize=(10, 8))
 sns.heatmap(pearson_corr, annot=True, cmap='RdBu_r', center=0)
-plt.show()
+plt.savefig("result/heatmap.png")
 
 # 创建一个新的figure，并设置其大小
 plt.figure(figsize=(20, 15))
@@ -31,7 +31,7 @@ for i, column in enumerate(data.columns, 1):
 plt.tight_layout()
 
 # 显示图形
-plt.show()
+plt.savefig("result/histogram.png")
 
 # 计算每个变量的偏度和峰度
 skewness = data.skew()
@@ -51,4 +51,4 @@ kurtosis.plot(kind='bar')
 plt.title('Kurtosis')
 
 # 显示图形
-plt.show()
+plt.savefig("result/skewness_kurtosis.png")
