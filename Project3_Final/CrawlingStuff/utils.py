@@ -3,9 +3,42 @@ import re
 
 
 def print_req(response):
+    # 请求相关信息
+    print("[Request Method]:", response.request.method)
+    print("[Request URL]:", response.request.url)
+
+    # 响应状态码
     print("[Status Code]:", response.status_code)
+
+    # 如果状态码是302，获取重定向地址
+    if response.status_code == 302:
+        redirect_url = response.headers.get('Location')
+        print("[Redirect Location]:", redirect_url)
+
+    # 响应时间
+    print("[Response Time]:", response.elapsed.total_seconds(), "seconds")
+
+    # 响应头信息
+    print("[Response Headers]:")
+    for header, value in response.headers.items():
+        print(f"    {header}: {value}")
+
+    # 媒体类型
     print("[Media Type]:", response.headers.get('Content-Type', 'N/A'))
-    print("[Content]:", response.text)  # Limiting to the first 500 characters for readability
+
+    # 响应内容
+    print("[Content]:")
+    print(response.text)
+
+    # 如果可能的话，解析并打印 JSON 响应
+    if 'application/json' in response.headers.get('Content-Type', ''):
+        try:
+            json_response = response.json()
+            print("[JSON Content]:")
+            import json
+            print(json.dumps(json_response, indent=4))
+        except ValueError:
+            print("    Unable to parse JSON content")
 
 
 available_headers = {

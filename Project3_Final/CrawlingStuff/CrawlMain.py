@@ -7,7 +7,8 @@ regions = ['pudong', 'minhang', 'songjiang', 'baoshan', 'jiading', 'xuhui', 'qin
 data_path = "../data/ajk.csv"
 
 
-def build_urls(region_index=None):
+
+def build_urls(region_index=None,page_index=0):
     urls = []
 
     if region_index is None:
@@ -15,14 +16,16 @@ def build_urls(region_index=None):
     target_regions = [regions[i] for i in region_index]
 
     for region in target_regions:
-        urls.append(f"https://shanghai.anjuke.com/sale/{region}/")
-        for i in range(2, 51):
-            urls.append(f"https://shanghai.anjuke.com/sale/{region}/p{i}")
+        if page_index==0:
+            urls.append(f"https://shanghai.anjuke.com/sale/{region}/")
+            page_index+=2
+        for i in range(page_index, 51):
+            urls.append(f"https://shanghai.anjuke.com/sale/{region}/p{i}/")
 
     return urls
 
 
-def main_crawling(urls,interval=5):
+def main_crawling(urls, interval=5):
     elapsed_time = 0
     with tqdm(urls, desc='Progress') as tbar:
         for url in tbar:
@@ -30,22 +33,21 @@ def main_crawling(urls,interval=5):
             tbar.update()
 
             start_time = datetime.now()
-            success=False
+            success = False
             while not success:
-                page_rsp = requests.get(url, headers=universal_headers)
+                page_rsp = requests.get(url, headers=universal_headers,allow_redirects=False)
                 page_data = ajk_html_process(page_rsp, datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
                 if page_data is None:
                     print("[Banned! Please Verify in 15 Seconds]")
                     webbrowser.open(url, new=0, autoraise=True)
                     sleep(15)
                 else:
-                    success=True
+                    success = True
             save_formatted_data(data_path, page_data)
             time.sleep(interval)
             elapsed_time = datetime.now() - start_time
 
 
 if __name__ == "__main__":
-    target_urls = build_urls([0])
-    main_crawling(target_urls,interval=0)
-
+    target_urls = build_urls([16],page_index=0)
+    main_crawling(target_urls, interval=0)

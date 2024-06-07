@@ -9,13 +9,15 @@ from time import sleep
 
 
 def ajk_html_process(response, timestamp):
+    if response.status_code==302 and response.headers.get('Location')=="https://www.anjuke.com/antispam-block/?from=antispam":
+        return None
     rsp_rst = []
 
     html_content = response.content.decode('utf-8')
     tree = etree.HTML(html_content)
     if tree is None:
         print("[No Data in This Page]")
-        return None
+        return rsp_rst
     div_elements = tree.xpath('//*[@id="esfMain"]/section/section[3]/section[1]/section[2]/div')
     # //*[@id="esfMain"]/section/section[3]/section[1]/section[2]/div[1]/a
 
@@ -71,7 +73,7 @@ def ajk_html_process(response, timestamp):
         rsp_rst.append(div_info)
     print("[Collected",len(rsp_rst),"data]")
     if len(rsp_rst)==0:
-        return None
+        print(response.request.url)
 
     return rsp_rst
 
