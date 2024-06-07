@@ -9,7 +9,7 @@ from math import pi
 # 加载数据
 # df = pd.read_csv("data\\preprocessed_data.csv")
 categories = ['tourism', 'entertainment', 'religion', 'food and drink']
-def plot_radar(df, row_numbers):
+def plot_radar(df, row_numbers,savepath):
     # 定义数据
     num_vars = len(categories)
 
@@ -43,4 +43,4 @@ def plot_radar(df, row_numbers):
     # 添加图例
     plt.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
 
-    plt.show()
+    plt.savefig(savepath)

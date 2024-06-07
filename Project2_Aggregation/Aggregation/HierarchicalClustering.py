@@ -5,12 +5,13 @@ import pandas as pd
 import scipy.cluster.hierarchy as sch
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-from Prepocess.ridarplot import plot_radar
+plt.rcParams['font.sans-serif'] = ['SimHei']
+from ridarplot import plot_radar
 
 global_config = {
     "clusters": 3
 }
-df = pd.read_csv('../data/preprocessed_data.csv')
+df = pd.read_csv('data/preprocessed_data.csv')
 names = df.iloc[:, 0]
 scores = df.iloc[:, 1:]
 
@@ -23,10 +24,11 @@ cluster_labels = sch.fcluster(linked, global_config['clusters'], criterion='maxc
 
 df['Cluster'] = cluster_labels
 print(df)
+df.to_csv('result/hierarchical_result.csv', index=False)
 
-df2 = df.groupby('Cluster').mean().reset_index()
+df2 = df.iloc[:,1:].groupby('Cluster').mean().reset_index()
 print(df2)
-plot_radar(df2,[0,1,2])
+plot_radar(df2,[0,1,2], 'result/hierarchical-radarplot.png')
 
 
 
@@ -37,3 +39,4 @@ plt.title('聚类结果')
 plt.xlabel('指标1')
 plt.ylabel('指标2')
 plt.show()
+plt.savefig("result/hierarchical-clustering.png")

@@ -5,14 +5,15 @@ import pandas as pd
 from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']
 import seaborn as sns
-from Prepocess.ridarplot import plot_radar
+from ridarplot import plot_radar
 
 global_config = {
     "clusters": 3
 }
 
-df = pd.read_csv('../data/preprocessed_data.csv')
+df = pd.read_csv('data/preprocessed_data.csv')
 attractions = df.iloc[:, 0]
 data = df.iloc[:, 1:]
 
@@ -20,10 +21,10 @@ gmm = GaussianMixture(n_components=global_config['clusters'], random_state=42)
 labels = gmm.fit_predict(data)
 
 df['Cluster'] = labels
-
-df2 = df.groupby('Cluster').mean().reset_index()
+df.to_csv('result/gmm_result.csv', index=False)
+df2 = df.iloc[:,1:].groupby('Cluster').mean().reset_index()
 print(df2)
-plot_radar(df2,[0,1,2])
+plot_radar(df2,[0,1,2],savepath='result/gmm-radarplot.png')
 
 
 # 可视化示例
@@ -42,3 +43,4 @@ plt.xlabel('Principal Component 1')
 plt.ylabel('Principal Component 2')
 plt.legend()
 plt.show()
+plt.savefig("result/gmm-clustering.png")

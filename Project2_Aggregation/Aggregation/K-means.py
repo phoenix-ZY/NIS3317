@@ -5,14 +5,15 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']
 import seaborn as sns
-from Prepocess.ridarplot import plot_radar
+from ridarplot import plot_radar
 
 global_config = {
     "clusters": 3
 }
 
-df = pd.read_csv('../data/preprocessed_data.csv')
+df = pd.read_csv('data/preprocessed_data.csv')
 spot_names = df.iloc[:, 0]
 data = df.iloc[:, 1:]
 
@@ -24,11 +25,11 @@ kmeans.fit(scaled_data)
 
 df['Cluster'] = kmeans.labels_
 print(df)
+df.to_csv('result/kmeans_result.csv', index=False)
 
-df2 = df.groupby('Cluster').mean().reset_index()
+df2 = df.iloc[:,1:].groupby('Cluster').mean().reset_index()
 print(df2)
-plot_radar(df2,[0,1,2])
-
+plot_radar(df2,[0,1,2], 'result/kmeans-radarplot.png')
 
 # 可视化示例
 from sklearn.decomposition import PCA
@@ -43,3 +44,4 @@ plt.figure(figsize=(10, 7))
 sns.scatterplot(x='PC1', y='PC2', hue='Cluster', data=df_pca, palette='viridis')
 plt.title('聚类结果')
 plt.show()
+plt.savefig("result/kmeans-clustering.png")
