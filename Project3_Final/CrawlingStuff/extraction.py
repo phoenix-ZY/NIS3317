@@ -78,7 +78,7 @@ def ajk_html_process(response, timestamp):
     return rsp_rst
 
 
-def save_formatted_data(file_path, data):
+def save_formatted_data(file_path, data,check_repetition=False):
     if data is None:
         print("[Data is None, Saving Stopped]")
         return
@@ -93,11 +93,12 @@ def save_formatted_data(file_path, data):
         for row in data:
             writer.writerow(row)
 
-    df = pd.read_csv(file_path)
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df_filtered = df.loc[df.groupby('id')['timestamp'].idxmax()]
+    if check_repetition:
+        df = pd.read_csv(file_path)
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+        df_filtered = df.loc[df.groupby('id')['timestamp'].idxmax()]
 
-    df_filtered.to_csv(file_path, index=False)
+        df_filtered.to_csv(file_path, index=False)
 
 
 if __name__ == "__main__":

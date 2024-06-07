@@ -28,7 +28,7 @@ def build_urls(region_index=None,page_index=0):
 def main_crawling(urls, interval=5):
     elapsed_time = 0
     with tqdm(urls, desc='Progress') as tbar:
-        for url in tbar:
+        for idx,url in enumerate(tbar):
             tbar.set_postfix(link=url, last_elapsed_time=elapsed_time)
             tbar.update()
 
@@ -43,11 +43,12 @@ def main_crawling(urls, interval=5):
                     sleep(15)
                 else:
                     success = True
-            save_formatted_data(data_path, page_data)
+            save_formatted_data(data_path, page_data,check_repetition=idx%int(len(urls)/10)==0)
             time.sleep(interval)
             elapsed_time = datetime.now() - start_time
+    save_formatted_data(data_path, [], check_repetition=True)
 
 
 if __name__ == "__main__":
-    target_urls = build_urls([12,13,14,15,16],page_index=0)
+    target_urls = build_urls([16],page_index=0)
     main_crawling(target_urls, interval=0)
