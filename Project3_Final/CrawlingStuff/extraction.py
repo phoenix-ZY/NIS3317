@@ -17,7 +17,7 @@ def ajk_html_process(response, timestamp):
     tree = etree.HTML(html_content)
     if tree is None:
         print("[No Data in This Page]")
-        return rsp_rst
+        return None
     div_elements = tree.xpath('//*[@id="esfMain"]/section/section[3]/section[1]/section[2]/div')
     # //*[@id="esfMain"]/section/section[3]/section[1]/section[2]/div[1]/a
 
