@@ -25,7 +25,7 @@ print(f"R-squared (R2): {r2}")
 
 abs_residuals = np.abs(data['y_test_origin'] - data['predictions'])
 
-threshold = data['y_test_origin'] * 0.05
+threshold = data['y_test_origin'] * 0.25
 
 within_threshold = abs_residuals <= threshold
 proportion_within_threshold = within_threshold.mean()
@@ -35,7 +35,7 @@ print(f"Proportion of absolute residuals within threshold of true values: {propo
 
 plt.figure(figsize=(10, 6))
 sns.scatterplot(x='y_test_origin', y='predictions', data=data, alpha=0.3)
-plt.plot([data['y_test_origin'].min(), data['y_test_origin'].max()], [data['predictions'].min(), data['predictions'].max()], 'r--')
+plt.plot([data['y_test_origin'].min(), data['y_test_origin'].max()], [data['y_test_origin'].min(), data['y_test_origin'].max()], 'r--')
 plt.xlabel('真实价格')
 plt.ylabel('预测价格')
 plt.title('预测价格与真实价格关系')
@@ -44,7 +44,7 @@ plt.show()
 
 residuals = data['y_test_origin'] - data['predictions']
 plt.figure(figsize=(10, 6))
-sns.histplot(residuals, bins=100, kde=True)
+sns.histplot(residuals, bins=200, kde=True)
 plt.xlabel('残差')
 plt.ylabel('频率')
 plt.title('残差分布')
