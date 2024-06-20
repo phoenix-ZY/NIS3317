@@ -1,0 +1,6 @@
+data/
+Regression/bert-base-chinese/
+Regression/X.npy
+Regression/y.npy
+Regression/nntrainTrans.py
+Regression/trained_model/
