@@ -50,5 +50,5 @@ def main_crawling(urls, interval=5):
 
 
 if __name__ == "__main__":
-    target_urls = build_urls([16],page_index=0)
+    target_urls = build_urls()
     main_crawling(target_urls, interval=0)
