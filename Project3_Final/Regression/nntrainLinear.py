@@ -50,8 +50,9 @@ def train():
     y = np.load('y.npy')
 
     # 划分训练集和测试集
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
+    X_train = X_test = X
+    y_train = y_test = y
     y_test_origin = y_test
     # 创建归一化器并拟合数据
     scaler_X = MinMaxScaler()
@@ -80,7 +81,7 @@ def train():
     # 用于存储每个epoch的训练和测试损失
     train_losses = []
     test_losses = []
-
+    min_test_loss = float('inf')
     # 训练模型
     for epoch in range(1000):  
         model.train()
@@ -112,14 +113,15 @@ def train():
             print(f'Epoch {epoch+1}, test_Loss: {test_loss.item()}')
 
         # 每隔50个epoch保存一次模型
-        if epoch % 50 == 0 and epoch > 0:
-            torch.save(model.state_dict(), f'model_{epoch}.pth')
+        if test_loss.item() < min_test_loss and epoch > 200:
+            min_test_loss = test_loss.item()
+            torch.save(model.state_dict(), 'best_model_test.pth')
 
     # 绘制训练和测试的损失曲线
     plt.plot(train_losses, label='Train Loss')
     plt.plot(test_losses, label='Test Loss')
     plt.legend()
-    plt.savefig("../result/模型拟合/loss曲线.png")
+    plt.savefig("../result/模型拟合/loss曲线TEST.png")
 
 
 def test():
@@ -127,7 +129,7 @@ def test():
     y = np.load('y.npy')
 
     # 划分训练集和测试集
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
     y_test_origin = y_test
     # 创建归一化器并拟合数据
@@ -151,7 +153,7 @@ def test():
 
     # 创建模型、优化器和损失函数
     model = MyModel().to(device)
-    model_weights = torch.load('model_700.pth')
+    model_weights = torch.load('9_1_best_model.pth')
     model.load_state_dict(model_weights)
     # 预测
     model.eval()

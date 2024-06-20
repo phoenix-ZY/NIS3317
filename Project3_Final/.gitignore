@@ -4,3 +4,6 @@ Regression/X.npy
 Regression/y.npy
 Regression/nntrainTrans.py
 Regression/trained_model/
+Regression/result/模型拟合/loss曲线TEST.png
+
+Regression/best_model_test.pth
