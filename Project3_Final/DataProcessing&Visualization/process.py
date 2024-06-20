@@ -97,6 +97,39 @@ df_cleaned['区'] = df_cleaned['location'].apply(determine_district)
 # 去掉labels列中的重复标签
 df_cleaned['labels'] = df_cleaned['labels'].apply(lambda x: list(set(x)))
 
+import pandas as pd
+
+# 假设你的原始数据存储在data中，并且每行数据的标签存储在labels列中
+data = pd.read_csv('ajk_cleaned.csv')
+
+import ast
+
+
+# 定义标签数字到名称的映射
+label_mapping = {
+    0: "近地铁", 1: "配套成熟", 3: "满五年", 4: "多人关注", 6: "车位充足", 7: "热门小区",
+    8: "南北通透", 9: "房东急售", 10: "绿化率高", 11: "户型方正", 12: "随时可看", 13: "唯一住房",
+    14: "采光较好", 15: "价格优惠", 17: "有电梯", 19: "次新房", 20: "新上小区", 21: "房东直卖",
+    22: "满五", 23: "满二年", 24: "人气热搜", 26: "优势户型", 29: "VIP房东直卖"
+}
+
+# 初始化新的列
+for label_num, label_name in label_mapping.items():
+    data[label_name] = 0
+
+# 填充新的列
+for index, row in data.iterrows():
+    labels = ast.literal_eval(row['labels'])  # 将字符串形式的列表转换为实际的列表
+    for label in labels:
+        if label in label_mapping:
+            data.at[index, label_mapping[label]] = 1
+
+# 删除原始的labels列
+data.drop(columns=['labels'], inplace=True)
+
+# 保存新的数据
+data.to_csv('new_data.csv', index=False)
+
 # 保存处理后的数据到新的CSV文件
 df_cleaned.to_csv('ajk_cleaned.csv', index=False)
 
