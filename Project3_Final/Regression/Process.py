@@ -20,8 +20,6 @@ def main() -> None:
     data = pd.read_csv('../data/ajk_cleaned_1.csv')
     processed_data = pd.DataFrame()
 
-
-    # 清洗数据
     data = data.dropna()
 
     # 将非数值型数据转换为数值型数据
@@ -39,7 +37,6 @@ def main() -> None:
 
     start_col = data.columns.get_loc("近地铁")
 
-    # 选择所有的行和从"近地铁"开始的所有列
     new_df = data.iloc[:, start_col:]
 
     processed_data = pd.concat([processed_data, new_df], axis=1)
@@ -52,18 +49,16 @@ def main() -> None:
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # Move the model to the GPU if available
+
     model = model.to(device)
     def encode_field(field):
-        # Tokenize input
+
         tokenized_input = tokenizer(field, padding=True, truncation=True, max_length=32, return_tensors='pt')
         tokenized_input = tokenized_input.to(device)
 
-        # Encode input
         with torch.no_grad():
             last_hidden_states = model(**tokenized_input)
 
-        # Get the embeddings of the [CLS] token for each sample
         embeddings = last_hidden_states[0][:,0,:].cpu().numpy()
 
         return embeddings
@@ -75,12 +70,12 @@ def main() -> None:
             embeddings.append(batch_embeddings)
         return np.concatenate(embeddings)
 
-    # Split 'name' and 'title' columns into batches of size 64
+
     name_batches = [data['name'].tolist()[i:i + 64] for i in range(0, len(data['name']), 64)]
     print("name_batches prepared")
     title_batches = [data['title'].tolist()[i:i + 64] for i in range(0, len(data['title']), 64)]
     print("title_batches prepared")
-    # Encode 'name' and 'title' columns and save them as numpy arrays
+
     name_encoded = encode_batches(name_batches)
     title_encoded = encode_batches(title_batches)
 

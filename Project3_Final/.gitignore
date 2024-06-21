@@ -1,5 +1,8 @@
 data/
-Regression/bert-base-chinese/
+Regression/bert-base-chinese/tf_model.h5
+Regression/bert-base-chinese/flax_model.msgpack
+Regression/bert-base-chinese/model.safetensors
+Regression/bert-base-chinese/pytorch_model.bin
 Regression/X.npy
 Regression/y.npy
 Regression/nntrainTrans.py

@@ -38,9 +38,9 @@ class MyModel(nn.Module):
         x2 = self.branch2(x[:, 32:800])
         x3 = self.branch3(x[:, 800:])
         x = torch.cat([x1, x2,x3], dim=1)
-        return self.final_layer(x)  # 添加一个维度
+        return self.final_layer(x)  
 
-# 检查是否有可用的GPU
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -54,24 +54,18 @@ def train():
     X_train = X_test = X
     y_train = y_test = y
     y_test_origin = y_test
-    # 创建归一化器并拟合数据
     scaler_X = MinMaxScaler()
     X_train = scaler_X.fit_transform(X_train)
     X_test = scaler_X.transform(X_test)
 
 
-    # 转换为torch.Tensor并移动到GPU
     X_train = torch.from_numpy(X_train).float().to(device)
     y_train = torch.from_numpy(y_train).float().to(device)
     X_test = torch.from_numpy(X_test).float().to(device)
     y_test = torch.from_numpy(y_test).float().to(device)
 
-    # 创建数据加载器
     train_dataset = TensorDataset(X_train, y_train)
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-
-    test_dataset = TensorDataset(X_test, y_test)
-    test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
     # 创建模型、优化器和损失函数
     model = MyModel().to(device)
@@ -90,11 +84,9 @@ def train():
         pbar = tqdm(train_dataloader, desc=f"Epoch {epoch+1}, Train Loss: {train_loss}")
         for i, (batch_X, batch_y) in enumerate(pbar):
             
-            # 前向传播
             outputs = model(batch_X)
             loss = criterion(outputs.squeeze(), batch_y)
 
-            # 反向传播和优化
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -138,13 +130,11 @@ def test():
     X_test = scaler_X.transform(X_test)
 
 
-    # 转换为torch.Tensor并移动到GPU
     X_train = torch.from_numpy(X_train).float().to(device)
     y_train = torch.from_numpy(y_train).float().to(device)
     X_test = torch.from_numpy(X_test).float().to(device)
     y_test = torch.from_numpy(y_test).float().to(device)
 
-    # 创建数据加载器
     train_dataset = TensorDataset(X_train, y_train)
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
@@ -180,5 +170,5 @@ def test():
 
 
 if __name__ == "__main__":
-    # train()
+    train()
     test()
