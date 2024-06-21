@@ -15,7 +15,7 @@
 运行方式：
 
 
-在运行之前，需要从`huggingface`上下载`bert-base-chinese`中的`pytorch_model.bin` 和 `tf_model.h5`两个文件置于`Regression/bert-base-chinese`文件夹中。
+在运行之前，需要从`huggingface`上下载`bert-base-chinese`中的模型文件置于`Regression/bert-base-chinese`文件夹中。
 
 ```bash
 cd CrawlingStuff
